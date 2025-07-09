@@ -1,27 +1,33 @@
-// src/App.test.jsx
-import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
-import App from './App'
+import React, { useEffect, useState } from 'react'
+import LoginForm from './components/LoginForm'
+import BlogList from './components/BlogList'
+import blogService from './services/blogs'
+import loginService from './services/login'
 
-beforeEach(() => {
-  localStorage.clear()
-})
+const App = () => {
+  const [user, setUser] = useState(null)
 
-test('login form submits credentials and stores user in localStorage', async () => {
-  render(<App />)
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
 
-  const usernameInput = screen.getByPlaceholderText(/username/i)
-  const passwordInput = screen.getByPlaceholderText(/password/i)
-  const loginButton = screen.getByText('login')
+  const handleLogin = async (credentials) => {
+    const user = await loginService.login(credentials)
+    window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+    blogService.setToken(user.token)
+    setUser(user)
+  }
 
-  fireEvent.change(usernameInput, { target: { value: 'testuser' } })
-  fireEvent.change(passwordInput, { target: { value: 'password' } })
-  fireEvent.click(loginButton)
+  if (!user) {
+    return <LoginForm onLogin={handleLogin} />
+  }
 
-  setTimeout(() => {
-    const storedUser = localStorage.getItem('loggedBlogappUser')
-    expect(storedUser).toBeTruthy()
-    const user = JSON.parse(storedUser)
-    expect(user.username).toBe('testuser')
-  }, 500)
-})
+  return <BlogList />
+}
+
+export default App
