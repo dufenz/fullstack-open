@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 import { vi } from 'vitest'
 
@@ -13,18 +13,14 @@ const blog = {
   }
 }
 
-test('renders title and author, but not url or likes by default', () => {
-  const { container } = render(
-    <Blog blog={blog} handleLike={vi.fn()} />
-  )
+test('shows url and likes when view button is clicked', () => {
+  render(<Blog blog={blog} handleLike={vi.fn()} />)
 
-  // Проверка: есть строка с title и author
-  const summary = screen.getByText((content) =>
-    content.includes('Test Blog Title') && content.includes('Test Author')
-  )
-  expect(summary).toBeDefined()
+  // Нажимаем кнопку "view"
+  const button = screen.getByText('view')
+  fireEvent.click(button)
 
-  // Проверка: url и likes скрыты
-  const details = container.querySelector('.blogDetails')
-  expect(details).toBeNull()
+  // Теперь должны появиться url и likes
+  expect(screen.getByText('https://testurl.com')).toBeDefined()
+  expect(screen.getByText(/likes: 10/i)).toBeDefined()
 })
