@@ -16,5 +16,4 @@ const useField = (type) => {
     reset
   }
 }
-
 export default useField
