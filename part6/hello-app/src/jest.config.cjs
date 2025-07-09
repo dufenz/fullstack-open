@@ -1,10 +1,10 @@
 module.exports = {
   transform: {
-    "^.+\\.[jt]sx?$": "babel-jest"
+    '^.+\\.[jt]sx?$': 'babel-jest'
   },
   transformIgnorePatterns: [
-    "/node_modules/(?!(axios)/)"
+    '/node_modules/(?!(axios)/)'
   ],
-  testEnvironment: "jsdom",
-  moduleFileExtensions: ["js", "jsx", "json", "node"],
+  testEnvironment: 'jest-environment-jsdom',
+  moduleFileExtensions: ['js', 'jsx', 'json', 'node'],
 }
