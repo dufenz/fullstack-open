@@ -13,14 +13,20 @@ const blog = {
   }
 }
 
-test('shows url and likes when view button is clicked', () => {
-  render(<Blog blog={blog} handleLike={vi.fn()} />)
+test('calls handleLike twice when like button is clicked twice', () => {
+  const mockHandler = vi.fn()
 
-  // Нажимаем кнопку "view"
-  const button = screen.getByText('view')
-  fireEvent.click(button)
+  render(<Blog blog={blog} handleLike={mockHandler} />)
 
-  // Теперь должны появиться url и likes
-  expect(screen.getByText('https://testurl.com')).toBeDefined()
-  expect(screen.getByText(/likes: 10/i)).toBeDefined()
+  // Открываем детали
+  const viewButton = screen.getByText('view')
+  fireEvent.click(viewButton)
+
+  // Дважды нажимаем like
+  const likeButton = screen.getByText('like')
+  fireEvent.click(likeButton)
+  fireEvent.click(likeButton)
+
+  // Проверяем количество вызовов
+  expect(mockHandler).toHaveBeenCalledTimes(2)
 })
