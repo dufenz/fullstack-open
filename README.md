@@ -1,19 +1,17 @@
-Part 0 – Fundamentals of Web Apps
-This folder contains the solutions for Part 0 of the Full Stack Open course (2025 edition).
+# 🚀 Full Stack Open 2025 – Personal Progress
 
-0.4 – New Note Diagram
-Describes what happens when a new note is submitted via the classic version of the app.
+This repository contains my solutions to the [Full Stack Open 2025](https://fullstackopen.com/en/) course by the University of Helsinki.  
+The course covers modern web development with JavaScript, React, Node.js, MongoDB, GraphQL, TypeScript, CI/CD, containerization, testing and more.
 
-📄 0.4-diagram/new_note_diagram.md
+## 🧠 What I've Learned
 
-0.5 – Single Page App Diagram
-Explains how the SPA version of the app loads and interacts with the server using JavaScript and JSON.
+- ✅ **React**: Hooks, components, state management, advanced patterns  
+- ✅ **Node.js + Express**: REST APIs, middleware, error handling  
+- ✅ **MongoDB**: CRUD operations, Mongoose, validation  
+- ✅ **Authentication**: JWT, secure user management  
+- ✅ **Testing**: Unit and integration testing with Jest and Supertest  
+- ✅ **Deployment**: Fly.io, Render, Netlify  
+- ✅ **CI/CD**: GitHub Actions  
+- ✅ **TypeScript** (later parts)  
+- ✅ **GraphQL** (optional part)
 
-📄 0.5-spa-diagram/spa_diagram.md
-
-0.6 – New Note in SPA Diagram
-Shows what happens when a user adds a new note in the SPA version without reloading the page.
-
-📄 0.6-spa-new-note/spa_new_note_diagram.md
-
-✅ All assignments completed locally and ready for review.
