@@ -3,16 +3,16 @@ import { render, screen } from '@testing-library/react'
 import NoteList from './NoteList'
 import noteService from './services/noteService'
 
-jest.mock('./services/noteService') // ⬅ подключение мока
+jest.mock('./services/noteService')  // подхватит __mocks__/noteService.js
 
-test('renders notes from mock', async () => {
+test('renders mocked notes using noteService', async () => {
   noteService.getAll.mockResolvedValue([
-    { id: 1, content: 'Mocked Note 1' },
-    { id: 2, content: 'Mocked Note 2' }
+    { id: 1, content: 'Note 1' },
+    { id: 2, content: 'Note 2' }
   ])
 
   render(<NoteList />)
 
-  expect(await screen.findByText('Mocked Note 1')).toBeInTheDocument()
-  expect(await screen.findByText('Mocked Note 2')).toBeInTheDocument()
+  expect(await screen.findByText('Note 1')).toBeInTheDocument()
+  expect(await screen.findByText('Note 2')).toBeInTheDocument()
 })
