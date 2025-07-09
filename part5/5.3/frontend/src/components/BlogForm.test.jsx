@@ -6,23 +6,23 @@ import { vi } from 'vitest'
 test('calls onCreate with correct details when new blog is created', () => {
   const createBlog = vi.fn()
 
-  const { getByLabelText, getByText } = render(<BlogForm onCreate={createBlog} />)
+  const { getByPlaceholderText, getByText } = render(<BlogForm onCreate={createBlog} />)
 
-  const titleInput = getByLabelText('title:')
-  const authorInput = getByLabelText('author:')
-  const urlInput = getByLabelText('url:')
+  const titleInput = getByPlaceholderText('Enter title')
+  const authorInput = getByPlaceholderText('Enter author')
+  const urlInput = getByPlaceholderText('Enter URL')
   const createButton = getByText('Create')
 
-  fireEvent.change(titleInput, { target: { value: 'Test Title' } })
-  fireEvent.change(authorInput, { target: { value: 'Author Name' } })
-  fireEvent.change(urlInput, { target: { value: 'https://test.url' } })
+  fireEvent.change(titleInput, { target: { value: 'Test Blog Title' } })
+  fireEvent.change(authorInput, { target: { value: 'Jane Doe' } })
+  fireEvent.change(urlInput, { target: { value: 'https://example.com' } })
 
   fireEvent.click(createButton)
 
   expect(createBlog).toHaveBeenCalledTimes(1)
   expect(createBlog).toHaveBeenCalledWith({
-    title: 'Test Title',
-    author: 'Author Name',
-    url: 'https://test.url'
+    title: 'Test Blog Title',
+    author: 'Jane Doe',
+    url: 'https://example.com',
   })
 })

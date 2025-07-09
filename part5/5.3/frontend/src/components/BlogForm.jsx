@@ -1,56 +1,59 @@
-import React, { useState } from 'react'
+import React from 'react'
+import useField from '../hooks/useField'
 
 const BlogForm = ({ onCreate }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
 
   const handleSubmit = (event) => {
     event.preventDefault()
     onCreate({
-      title,
-      author,
-      url,
+      title: title.value,
+      author: author.value,
+      url: url.value,
     })
+    // очистка после отправки
+    title.reset()
+    author.reset()
+    url.reset()
+  }
 
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+  const handleReset = (event) => {
+    event.preventDefault()
+    title.reset()
+    author.reset()
+    url.reset()
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label>
-          title:
-          <input
-            type="text"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </label>
+        <input
+          type={title.type}
+          value={title.value}
+          onChange={title.onChange}
+          placeholder="Enter title"
+        />
       </div>
       <div>
-        <label>
-          author:
-          <input
-            type="text"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </label>
+        <input
+          type={author.type}
+          value={author.value}
+          onChange={author.onChange}
+          placeholder="Enter author"
+        />
       </div>
       <div>
-        <label>
-          url:
-          <input
-            type="text"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </label>
+        <input
+          type={url.type}
+          value={url.value}
+          onChange={url.onChange}
+          placeholder="Enter URL"
+        />
       </div>
       <button type="submit">Create</button>
+      <button onClick={handleReset} type="button">Reset</button>
     </form>
   )
 }
