@@ -5,17 +5,25 @@ const BlogForm = ({ createBlog }) => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const handleSubmit = e => {
-    e.preventDefault()
+  const handleSubmit = (event) => {
+    event.preventDefault()
     createBlog({ title, author, url })
-    setTitle(''); setAuthor(''); setUrl('')
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>title: <input value={title} onChange={e => setTitle(e.target.value)} /></div>
-      <div>author: <input value={author} onChange={e => setAuthor(e.target.value)} /></div>
-      <div>url: <input value={url} onChange={e => setUrl(e.target.value)} /></div>
+      <div>
+        title: <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+      </div>
+      <div>
+        author: <input id="author" value={author} onChange={(e) => setAuthor(e.target.value)} />
+      </div>
+      <div>
+        url: <input id="url" value={url} onChange={(e) => setUrl(e.target.value)} />
+      </div>
       <button type="submit">create</button>
     </form>
   )
