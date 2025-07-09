@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:3001'
 
+import Togglable from './components/Togglable.jsx'
+
 const Notification = ({ message, isError }) => {
   if (!message) return null
-  const style = {
+  const style = { 
     color: isError ? 'red' : 'green',
     border: '1px solid',
     padding: 10,
@@ -18,6 +20,7 @@ function App() {
   const [notification, setNotification] = useState(null)
   const [error, setError] = useState(false)
   const [inputs, setInputs] = useState({ title: '', author: '', url: '' })
+  const togglableRef = useRef()
 
   useEffect(() => {
     axios.get('/api/blogs').then(res => setBlogs(res.data))
@@ -34,32 +37,30 @@ function App() {
     try {
       const res = await axios.post('/api/blogs', { ...inputs, likes: 0 })
       setBlogs(blogs.concat(res.data))
-      notify(`Added blog "${res.data.title}"`)
+      togglableRef.current.toggleVisibility()
+      notify(`Added "${res.data.title}"`)
       setInputs({ title: '', author: '', url: '' })
-    } catch (e) {
+    } catch {
       notify('Error creating blog', true)
     }
   }
 
   return (
     <div>
-      <h2>Bloglist 5.4</h2>
+      <h2>Bloglist 5.5</h2>
       <Notification message={notification} isError={error} />
 
-      <form onSubmit={handleCreate}>
-        <div>title <input value={inputs.title}
-          onChange={e => setInputs({...inputs, title: e.target.value})} /></div>
-        <div>author <input value={inputs.author}
-          onChange={e => setInputs({...inputs, author: e.target.value})} /></div>
-        <div>url <input value={inputs.url}
-          onChange={e => setInputs({...inputs, url: e.target.value})} /></div>
-        <button type="submit">create</button>
-      </form>
+      <Togglable buttonLabel="create new blog" ref={togglableRef}>
+        <form onSubmit={handleCreate}>
+          <div>title <input value={inputs.title} onChange={e => setInputs({ ...inputs, title: e.target.value })} /></div>
+          <div>author <input value={inputs.author} onChange={e => setInputs({ ...inputs, author: e.target.value })} /></div>
+          <div>url <input value={inputs.url} onChange={e => setInputs({ ...inputs, url: e.target.value })} /></div>
+          <button type="submit">create</button>
+        </form>
+      </Togglable>
 
       <ul>
-        {blogs.map(b => (
-          <li key={b.id}>{b.title} by {b.author}</li>
-        ))}
+        {blogs.map(b => <li key={b.id}>{b.title} by {b.author}</li>)}
       </ul>
     </div>
   )
