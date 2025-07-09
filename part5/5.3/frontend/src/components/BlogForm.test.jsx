@@ -1,26 +1,28 @@
+import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import BlogForm from './BlogForm'
-import React from 'react'
+import { vi } from 'vitest'
 
-test('form calls createBlog with form data', () => {
+test('calls onCreate with correct details when new blog is created', () => {
   const createBlog = vi.fn()
 
-  const { container } = render(<BlogForm createBlog={createBlog} />)
+  const { getByLabelText, getByText } = render(<BlogForm onCreate={createBlog} />)
 
-  const titleInput = container.querySelector('#title')
-  const authorInput = container.querySelector('#author')
-  const urlInput = container.querySelector('#url')
-  const form = container.querySelector('form')
+  const titleInput = getByLabelText('title:')
+  const authorInput = getByLabelText('author:')
+  const urlInput = getByLabelText('url:')
+  const createButton = getByText('Create')
 
-  fireEvent.change(titleInput, { target: { value: 'test title' } })
-  fireEvent.change(authorInput, { target: { value: 'test author' } })
-  fireEvent.change(urlInput, { target: { value: 'http://test.url' } })
-  fireEvent.submit(form)
+  fireEvent.change(titleInput, { target: { value: 'Test Title' } })
+  fireEvent.change(authorInput, { target: { value: 'Author Name' } })
+  fireEvent.change(urlInput, { target: { value: 'https://test.url' } })
+
+  fireEvent.click(createButton)
 
   expect(createBlog).toHaveBeenCalledTimes(1)
   expect(createBlog).toHaveBeenCalledWith({
-    title: 'test title',
-    author: 'test author',
-    url: 'http://test.url',
+    title: 'Test Title',
+    author: 'Author Name',
+    url: 'https://test.url'
   })
 })

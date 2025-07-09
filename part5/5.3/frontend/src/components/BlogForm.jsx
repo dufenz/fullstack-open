@@ -1,13 +1,18 @@
 import React, { useState } from 'react'
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = ({ onCreate }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    createBlog({ title, author, url })
+    onCreate({
+      title,
+      author,
+      url,
+    })
+
     setTitle('')
     setAuthor('')
     setUrl('')
@@ -16,15 +21,36 @@ const BlogForm = ({ createBlog }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        title: <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <label>
+          title:
+          <input
+            type="text"
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+          />
+        </label>
       </div>
       <div>
-        author: <input id="author" value={author} onChange={(e) => setAuthor(e.target.value)} />
+        <label>
+          author:
+          <input
+            type="text"
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+        </label>
       </div>
       <div>
-        url: <input id="url" value={url} onChange={(e) => setUrl(e.target.value)} />
+        <label>
+          url:
+          <input
+            type="text"
+            value={url}
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </label>
       </div>
-      <button type="submit">create</button>
+      <button type="submit">Create</button>
     </form>
   )
 }
