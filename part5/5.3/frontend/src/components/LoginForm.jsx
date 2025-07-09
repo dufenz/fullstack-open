@@ -1,30 +1,38 @@
-import React, { useState } from 'react'
+import React from 'react'
+import useField from '../hooks/useField'
 
 const LoginForm = ({ onLogin }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const username = useField('text')
+  const password = useField('password')
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    onLogin({ username, password })
+    onLogin({
+      username: username.value,
+      password: password.value,
+    })
+
+    // очистка полей
+    username.reset()
+    password.reset()
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
         <input
-          type="text"
+          type={username.type}
+          value={username.value}
+          onChange={username.onChange}
           placeholder="username"
-          value={username}
-          onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
         <input
-          type="password"
+          type={password.type}
+          value={password.value}
+          onChange={password.onChange}
           placeholder="password"
-          value={password}
-          onChange={({ target }) => setPassword(target.value)}
         />
       </div>
       <button type="submit">login</button>
