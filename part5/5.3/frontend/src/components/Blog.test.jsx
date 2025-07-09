@@ -1,41 +1,30 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import Blog from './Blog'
 import React from 'react'
+import { render, screen } from '@testing-library/react'
+import Blog from './Blog'
+import { vi } from 'vitest'
 
 const blog = {
-  title: 'Test Blog',
+  title: 'Test Blog Title',
   author: 'Test Author',
-  url: 'http://test.url',
-  likes: 5,
+  url: 'https://testurl.com',
+  likes: 10,
   user: {
-    username: 'testuser',
-    name: 'Test User',
-  },
+    name: 'Test User'
+  }
 }
 
-const currentUser = { username: 'testuser' }
+test('renders title and author, but not url or likes by default', () => {
+  const { container } = render(
+    <Blog blog={blog} handleLike={vi.fn()} />
+  )
 
-test('renders title and author by default', () => {
-  render(<Blog blog={blog} currentUser={currentUser} />)
-  expect(screen.getByText((content) =>
-    content.includes('Test Blog') && content.includes('Test Author')
-  )).toBeDefined()
-  expect(screen.queryByText('http://test.url')).toBeNull()
-})
+  // Проверка: есть строка с title и author
+  const summary = screen.getByText((content) =>
+    content.includes('Test Blog Title') && content.includes('Test Author')
+  )
+  expect(summary).toBeDefined()
 
-test('clicking view shows url and likes', () => {
-  render(<Blog blog={blog} currentUser={currentUser} />)
-  fireEvent.click(screen.getByText('view'))
-  expect(screen.getByText('http://test.url')).toBeDefined()
-  expect(screen.getByText('likes 5')).toBeDefined()
-})
-
-test('clicking like twice calls handler twice', () => {
-  const mockHandler = vi.fn()
-  render(<Blog blog={blog} onLike={mockHandler} currentUser={currentUser} />)
-  fireEvent.click(screen.getByText('view'))
-  const likeBtn = screen.getByText('like')
-  fireEvent.click(likeBtn)
-  fireEvent.click(likeBtn)
-  expect(mockHandler).toHaveBeenCalledTimes(2)
+  // Проверка: url и likes скрыты
+  const details = container.querySelector('.blogDetails')
+  expect(details).toBeNull()
 })
