@@ -1,18 +1,20 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import NoteList from './NoteList'
-import noteService from './services/noteService'
+import axios from 'axios'
 
-jest.mock('./services/noteService')  // подхватит __mocks__/noteService.js
+jest.mock('axios')
 
-test('renders mocked notes using noteService', async () => {
-  noteService.getAll.mockResolvedValue([
-    { id: 1, content: 'Note 1' },
-    { id: 2, content: 'Note 2' }
-  ])
+test('renders notes from mocked axios', async () => {
+  const mockNotes = [
+    { id: 1, content: 'Note from axios 1' },
+    { id: 2, content: 'Note from axios 2' },
+  ]
+
+  axios.get.mockResolvedValue({ data: mockNotes })
 
   render(<NoteList />)
 
-  expect(await screen.findByText('Note 1')).toBeInTheDocument()
-  expect(await screen.findByText('Note 2')).toBeInTheDocument()
+  expect(await screen.findByText('Note from axios 1')).toBeInTheDocument()
+  expect(await screen.findByText('Note from axios 2')).toBeInTheDocument()
 })

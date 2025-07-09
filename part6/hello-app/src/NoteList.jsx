@@ -9,9 +9,11 @@ const NoteList = () => {
   }, [])
 
   return (
-    <ul>
-      {notes.map(n => <li key={n.id}>{n.content}</li>)}
-    </ul>
+    <div>
+      {notes.map(note => (
+        <p key={note.id}>{note.content}</p>
+      ))}
+    </div>
   )
 }
 
