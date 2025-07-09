@@ -1,56 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react'
-import axios from 'axios'
-axios.defaults.baseURL = 'http://localhost:3001'
+// src/App.test.jsx
+import React from 'react'
+import { render, screen, fireEvent } from '@testing-library/react'
+import App from './App'
 
-import Togglable from './components/Togglable.jsx'
-import BlogForm from './components/BlogForm.jsx'
+beforeEach(() => {
+  localStorage.clear()
+})
 
-const Notification = ({ message, isError }) => {
-  if (!message) return null
-  const style = { color: isError ? 'red' : 'green', border: '1px solid', padding: 10, marginBottom: 10 }
-  return <div style={style}>{message}</div>
-}
+test('login form submits credentials and stores user in localStorage', async () => {
+  render(<App />)
 
-function App() {
-  const [blogs, setBlogs] = useState([])
-  const [notification, setNotification] = useState(null)
-  const [error, setError] = useState(false)
-  const togglableRef = useRef()
+  const usernameInput = screen.getByPlaceholderText(/username/i)
+  const passwordInput = screen.getByPlaceholderText(/password/i)
+  const loginButton = screen.getByText('login')
 
-  useEffect(() => {
-    axios.get('/api/blogs').then(res => setBlogs(res.data))
-  }, [])
+  fireEvent.change(usernameInput, { target: { value: 'testuser' } })
+  fireEvent.change(passwordInput, { target: { value: 'password' } })
+  fireEvent.click(loginButton)
 
-  const notify = (msg, isErr = false) => {
-    setNotification(msg); setError(isErr)
-    setTimeout(() => setNotification(null), 5000)
-  }
-
-  const createBlog = async blogObject => {
-    try {
-      const res = await axios.post('/api/blogs', { ...blogObject, likes: 0 })
-      setBlogs(blogs.concat(res.data))
-      togglableRef.current.toggleVisibility()
-      notify(`Added "${res.data.title}"`)
-    } catch {
-      notify('Error creating blog', true)
-    }
-  }
-
-  return (
-    <div>
-      <h2>Bloglist 5.6</h2>
-      <Notification message={notification} isError={error} />
-
-      <Togglable buttonLabel="create new blog" ref={togglableRef}>
-        <BlogForm createBlog={createBlog} />
-      </Togglable>
-
-      <ul>
-        {blogs.map(b => <li key={b.id}>{b.title} by {b.author}</li>)}
-      </ul>
-    </div>
-  )
-}
-
-export default App
+  setTimeout(() => {
+    const storedUser = localStorage.getItem('loggedBlogappUser')
+    expect(storedUser).toBeTruthy()
+    const user = JSON.parse(storedUser)
+    expect(user.username).toBe('testuser')
+  }, 500)
+})
